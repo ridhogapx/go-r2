@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/joho/godotenv"
 )
 
 type R2Config struct {
@@ -49,12 +50,19 @@ func (b *bucketBasic) UploadFile(bucketName string, objectKey string, filename s
 }
 
 func main() {
+	// Load .env with godotenv library
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal("Failed to load env:", err)
+	}
+
 	// Initialize credentials
 	r2 := R2Config{
-		Bucket:    "dev-01",
-		AccountID: "1b29a6e5d3b7451ee454d27dc2350700",
-		Key:       "933b0ca2a33bb969d4885def8d2f95c7",
-		Secret:    "ec9ffb554ca242384d58cf9a72105ca872a4b6aa3f67d26d1412770b32b7aa1c",
+		Bucket:    os.Getenv("BUCKET"),
+		AccountID: os.Getenv("ACCOUNT_ID"),
+		Key:       os.Getenv("KEY"),
+		Secret:    os.Getenv("SECRET"),
 	}
 
 	// Logging for testing purpose
